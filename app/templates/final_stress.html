@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<script>
+$.ajax({
+	url: 'http://localhost:22002/NeuLogAPI?GetExperimentSamples',
+	type: 'GET',
+	timeout: 3000,
+	error: function (a, b, c) {
+		console.log("Neulog Error!");
+	},
+	success: function (data) {
+		$.ajax({
+			url: 'http://localhost:5000/log_time',
+			type: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify((new Date).getTime() + data.toString()),
+		});
+	}
+});
+</script>
+<h2>{{ title }}</h2>
+<hr>
+<p>Please rate your level of stress or anxiety. </p>
+<p>Stress is a feeling of strain and pressure. Anxiety is a feeling of fear, worry, and uneasiness.</p>
+<hr>
+<form method="post" action="" name="{{ title }}">
+	{{ form.hidden_tag() }}
+	<h4>How stressed or anxious do you currently feel?</h4>
+		{% for bracket in form.stress %}
+		<tr>
+			<td>{{ bracket }}</td>
+			<td>{{ bracket.label }}</td><br>
+		</tr>
+		{% endfor %}{% for error in form.stress.errors %}
+		<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}
+	<hr>
+	<input type="submit" value="Next" class="next" name="submit">
+</form>
+{% endblock %}

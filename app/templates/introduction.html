@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<hr>
+<p>The following task requires you to read a series of 40 paragraphs. While reading each paragraph, you must make a decision as to whether or not it relates to <strong>{{ topic }}</strong>.</p>
+<hr>
+<p>{{ topic_para|safe }}</p>
+<hr>
+<form action="" method="post" name="{{ title }}">
+	{{ form.hidden_tag() }}
+	<h4>How familiar are you with this topic?</h4>
+		{% for bracket in form.familiar %}
+		<tr>
+			<td>{{ bracket }}</td>
+			<td>{{ bracket.label }}</td><br>
+		</tr>
+		{% endfor %}			{% for error in form.familiar.errors %}
+		<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}
+		<hr>
+	<p>You have a total of up to 45 seconds to read each document and make a selection as to whether or not it relates to this topic. You will also have an opportunity to rate how confident you are in making this decision. 
+	<p>You may freely select between the options before pressing the <i>Submit</i> button, after which your answer will be locked in, and the next document will be displayed. You may submit an answer at any time, however once submitted the document will change and you can <u>not</u> go back and change it. If you run out of time on any particular document, your last selected answer will be submitted automatically.
+	<p>You must answer as accurately as possible within the time limit provided.
+	<hr>
+	<input type="submit" value="Next" class="next" name="submit">
+</form>
+{% endblock %}

@@ -1,0 +1,118 @@
+body {
+background: #E3E3E3;
+font-family: Verdana, arial, helvetica, sans-serif;
+}
+
+.content-wrapper {
+width: 960px;
+position: absolute;
+top:0;
+bottom:0;
+left: 0;
+right: 0;
+margin: 0 auto;
+height: 100vh;
+background-color: white;
+}
+
+.content {
+position: relative;
+top: -10px;
+padding: 0 10px;
+}
+
+.asterisk {
+font-size: 10px;
+color: red;
+vertical-align: super;
+}
+
+.conf_label {
+cursor: pointer;
+}
+
+.response_label {
+cursor: pointer;
+}
+
+.form_div {
+float:left;
+padding: 5px;
+}
+
+#conf_span {
+text-align: center;
+}
+
+#response_div {
+width: 530px;
+}
+
+#conf_div {
+border: 1px dashed black;
+position: relative;
+left: 20px;
+width: 150px;
+line-height: 150%;
+float: left;
+}
+
+#submit_div {
+position: relative;
+left: 60px;
+top: 13px;
+}
+
+#document-text, #start-text{
+padding: 25px;
+height: 69vh;
+font-size: 16px;
+line-height: 160%;
+}
+
+#timer {
+text-align: center;
+height: 50px;
+text-transform: uppercase;
+font-weight: bold;
+color: red;
+margin-top: 0.85em;
+}
+
+#countdown {
+width: 100px;
+position: relative;
+left: 430px;
+top: 7px;
+}
+
+#form {
+padding: 20px 0px;
+height: 80px;
+border-top: 1px solid grey;
+background-color: white;
+line-height: 250%;
+}
+
+.task {
+cursor: pointer;
+}
+
+.next {
+float: right;
+width: 100px;
+height: 50px;
+}
+
+#submit {
+width: 100px;
+height: 50px;
+}
+
+input[class="task"]:checked + label {
+font-weight: bold;
+}
+
+input[type="text"] {
+width: 50%;
+}

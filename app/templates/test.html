@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<script type="text/javascript">
+$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+$(function() {
+	$('#lol').bind('click', function() {
+		if (next) {
+			if (next != "ENDED") {
+				$('#document-text').html(next);
+				$.getJSON($SCRIPT_ROOT + '/_get_doc', function(data) {
+				next = data.current;
+			});
+			} else {
+				$('#document-text').html("Redirecting...");
+				window.location = "finalstress"
+			}
+		} else {
+			$.getJSON($SCRIPT_ROOT + '/_get_doc', function(data) {
+				current = data.result;
+				next = data.next;
+				$('#document-text').html(current);
+			});
+		};
+	});	
+});
+</script>
+<hr>
+<p>Testing</p>
+<p>{{ data|safe }}<br>{{ text|safe }}<br>{{ lol|safe }}</p>
+<input type="button" id="lol" value="submit">
+<div id="document-text">s</div>
+<p>Thank you for participating.</p><hr>
+{% endblock %}

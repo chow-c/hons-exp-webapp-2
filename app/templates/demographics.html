@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<hr>
+<form method="post" action="" name="{{ title }}">
+	{{ form.hidden_tag() }}
+	<h4>What is your age?</h4>
+		{% for bracket in form.age %}
+		<tr>
+			<td>{{ bracket }}</td>
+			<td>{{ bracket.label }}</td><br>
+		</tr>
+		{% endfor %}
+		{% for error in form.vision.errors %}
+		<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}
+	<hr>
+	<h4>What is your gender?</h4>
+		{% for bracket in form.gender %}
+		<tr>
+			<td>{{ bracket }}</td>
+			<td>{{ bracket.label }}</td><br>
+		</tr>
+		{% endfor %}
+		{% for error in form.vision.errors %}
+		<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}
+	<hr>
+	<h4>What is your degree or area of study?</h4>
+		{{ form.degree }}{% for error in form.degree.errors %}
+		<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}
+	<hr>
+	<h4>Do you have normal vision?</h4>
+	<p><emphasis>Note:</emphasis> If you have corrected-to-normal vision (such as via glasses, contacts or surgery), please answer Yes.</p>
+		{% for bracket in form.vision %}
+		<tr>
+			<td>{{ bracket }}</td>
+			<td>{{ bracket.label }}</td><br>
+		</tr>
+		{% endfor %}
+		{% for error in form.vision.errors %}
+		<span style="color: red;">[{{ error }}]</span>
+		{% endfor %}
+	<hr>
+	<input type="submit" value="Next" class="next" name="submit">
+</form>
+{% endblock %}

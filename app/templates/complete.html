@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ title }}</h2>
+<script>
+$.ajax({
+	url: 'http://localhost:22002/NeuLogAPI?StopExperiment',
+	type: 'GET',
+	timeout: 3000,
+	error: function (a, b, c) {
+		console.log("Neulog Error!");
+	},
+	success: function (data) {
+		//console.log(data);
+		$.ajax({
+			url: 'http://localhost:5000/log_time',
+			type: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify((new Date).getTime() + data.toString()),
+		});
+	}
+});
+</script>
+<hr>
+<p>Task completed. 
+<p>Your score was <strong>{{ score }}</strong>. The highest score for COMP1710 is <strong>{{ high_score }}</strong></p>
+<p>Thank you for participating.</p><hr>
+{% endblock %}

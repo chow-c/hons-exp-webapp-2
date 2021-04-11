@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% block content %}
+<script src="../static/js/countdown.js"></script>
+<div id="timer">Time Remaining:
+	<div id="countdown">4</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+		
+	var paused = false;
+	var current;
+	var next;
+	var eyedata = [];
+	
+	$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+	// Loop through eyetribe collecting data
+	EyeTribe.loop(function(frame) {
+		if (paused) return;
+		eyedata.push(frame.dump());
+	}); 
+	
+	function populateContent(eyedata) {
+		if (next) {
+			if (next != "ENDED") {
+				$('#document-text').html(next);
+				$.getJSON($SCRIPT_ROOT + '/_get_doc', function(data) {
+					next = data.next;
+				});
+			} else {
+				$('#document-text').html("");
+				// Dump eye data
+				$.ajax({
+					url: '/_dump_eyegaze',
+					data: JSON.stringify(eyedata),
+					contentType: "application/json",
+					type: 'POST',
+					success: function(response) {
+						console.log(response);
+						window.location = "finalstress";
+						},
+					error: function(error) {
+						console.log(error);
+					}
+				});  
+				
+			}
+		} else {
+			$.getJSON($SCRIPT_ROOT + '/_get_doc', function(data) {
+				current = data.result;
+				next = data.next;
+				$('#document-text').html(current);
+			});
+		};
+	};
+
+	populateContent(eyedata);
+	
+	countdown();
+	
+	// Loop through eyetribe collecting data
+	EyeTribe.loop(function(frame) {
+		if (paused) return;
+		eyedata.push(frame.dump());
+	}); 
+  
+	// on form submit
+	$(function() {
+		$('#submit').click(function() {			
+			if ($('.task').is(':checked')) {
+				var sel = $('.task:checked').val();
+			} else {
+				var sel = 'NULL';
+			};
+			
+			var conf = $('.conf:checked').val();
+			
+			$.ajax({
+				url: '/_set_results',
+				data: JSON.stringify({'conf':conf,'sel':sel}),
+				type: 'post',
+				contentType: "application/json",
+				success: function(response) {
+					console.log(response);
+					},
+				error: function(error) {
+					console.log(error);
+				}
+			}); 
+		
+			// Show the form
+			$('#form').show();
+			
+			// Reset countdown timer
+			$('#countdown').html('45');
+			
+			$(".task").prop('checked', false);
+			$(".conf").prop('checked', false);
+			$("#confidence-1").prop('checked', true);
+			
+			// Fade out text, update it and fade back in
+			$("#text").fadeOut(200,function() {
+				populateContent(eyedata);
+			});
+			$("#text").fadeIn(200);
+			
+		});
+	});
+});
+</script>
+<div id='text'><div id="document-text"></div></div>
+<form id='form' action="" method="post" name="{{ title }}" hidden>
+	{{ form.hidden_tag() }}
+	<div class="form_div" id="response_div">
+	{% for bracket in form.selection %}
+		{{ bracket(class_='task') }}
+		{{ bracket.label(class_='response_label') }}{% if session['target'] == 'com'%}<strong>computer science</strong>{% elif session['target'] == 'sec'%}<strong>national security</strong>{% elif session['target'] == 'dis'%}<strong>natural disasters</strong>{% elif session['target'] == 'psy'%}<strong>psychology</strong>{% endif %}<br>
+	{% endfor %}
+	</div>
+	<div class="form_div" id="conf_div" style="text-align: center;">
+	Confidence<br>
+	{% for bracket in form.confidence %}
+		{{ bracket(class_='conf') }}
+		{{ bracket.label(class_='conf_label') }} <br/>
+	{% endfor %}
+	</div>
+	<div class="form_div" id="submit_div">
+		<input type="button" value="Submit" id="submit" class="task">
+	</div>
+</form>
+{% endblock %}
